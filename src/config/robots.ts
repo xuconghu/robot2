@@ -4,9 +4,23 @@ export interface RobotImage {
   name: string;
 }
 
-// 要保留的机器人ID列表（用户可以修改这个列表来选择需要的机器人）
-// 请将这个数组替换为您想要保留的机器人ID列表
+import { RobotCountService, MAX_ASSESSMENT_COUNT } from '@/lib/api-service';
+
+// ============================================================
+// 配置区域：可以根据需要修改这些配置
+// ============================================================
+
+// 每次评估需要的机器人数量
+export const ROBOTS_PER_ASSESSMENT = 5;
+
+// 每个机器人允许的最大评估次数，应与后端设置保持一致
+// 注意：此值在后端worker.js和前端api-service.ts中也定义了，修改时需要保持一致
+// export const MAX_ASSESSMENT_COUNT = 15; // 直接从api-service.ts导入
+
+// 要保留的机器人ID列表
+// 如需修改此列表，只需在此处添加或删除机器人ID
 export const SELECTED_ROBOT_IDS = [
+  // 您可以根据需要更新此列表
   'robot002', 'robot003', 'robot006', 'robot008', 'robot009', 'robot011', 'robot012', 'robot013', 'robot014', 'robot015',
   'robot016', 'robot017', 'robot018', 'robot019', 'robot020', 'robot024', 'robot025', 'robot026', 'robot028', 'robot029',
   'robot031', 'robot032', 'robot033', 'robot034', 'robot035', 'robot036', 'robot037', 'robot038', 'robot039', 'robot041',
@@ -26,6 +40,10 @@ export const SELECTED_ROBOT_IDS = [
   'robot231', 'robot232', 'robot233', 'robot234', 'robot235', 'robot237', 'robot238', 'robot241', 'robot242', 'robot243',
   'robot245', 'robot246', 'robot247', 'robot248', 'robot249', 'robot250'
 ];
+
+// ============================================================
+// 以下内容通常不需要修改
+// ============================================================
 
 // 所有可用的机器人图片
 const ALL_ROBOT_IMAGES: RobotImage[] = [
@@ -287,10 +305,46 @@ export const ROBOT_IMAGES: RobotImage[] = ALL_ROBOT_IMAGES.filter(robot =>
   SELECTED_ROBOT_IDS.includes(robot.id)
 );
 
-// 每次评估需要的机器人数量
-export const ROBOTS_PER_ASSESSMENT = 3;
+// 随机选择指定数量的机器人，优先选择评估次数少于MAX_ASSESSMENT_COUNT次的机器人
+export async function getRandomRobotsWithCounts(count: number = ROBOTS_PER_ASSESSMENT): Promise<RobotImage[]> {
+  try {
+    // 获取可用的机器人ID列表（评估次数少于MAX_ASSESSMENT_COUNT次的）
+    const availableRobotIds = await RobotCountService.getAvailableRobots();
+    
+    // 过滤出可用的机器人
+    let availableRobots = ROBOT_IMAGES.filter(robot => 
+      availableRobotIds.includes(robot.id)
+    );
+    
+    // 如果可用机器人不足，使用所有机器人（可能有些已达到MAX_ASSESSMENT_COUNT次评估）
+    if (availableRobots.length < count) {
+      console.warn(`可用机器人不足，将使用全部机器人池 (需要${count}个，可用${availableRobots.length}个)`);
+      availableRobots = [...ROBOT_IMAGES];
+    }
+    
+    // 确保不要尝试选择比可用机器人更多的数量
+    const selectCount = Math.min(count, availableRobots.length);
+    
+    // 复制数组防止修改原数组
+    const shuffled = [...availableRobots];
+    
+    // Fisher-Yates 随机算法
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+    
+    // 返回前selectCount个元素
+    return shuffled.slice(0, selectCount);
+    
+  } catch (error) {
+    console.error('获取带计数的随机机器人失败，使用本地随机选择:', error);
+    // 发生错误时回退到原始的随机选择
+    return getRandomRobots(count);
+  }
+}
 
-// 随机选择指定数量的机器人
+// 保留原始的同步随机选择函数，作为备选
 export function getRandomRobots(count: number = ROBOTS_PER_ASSESSMENT): RobotImage[] {
   // 确保不要尝试选择比可用机器人更多的数量
   const selectCount = Math.min(count, ROBOT_IMAGES.length);

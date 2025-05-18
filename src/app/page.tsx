@@ -6,7 +6,7 @@ import { AssessmentPanel } from '@/components/assessment-panel';
 import { FeaturesPanel } from '@/components/features-panel';
 import { ASSESSMENT_QUESTIONS as ALL_QUESTIONS, INITIAL_SLIDER_VALUE } from '@/config/questions';
 import { ROBOT_FEATURES } from '@/config/features';
-import { getRandomRobots, ROBOTS_PER_ASSESSMENT } from '../config/robots';
+import { getRandomRobots, getRandomRobotsWithCounts, ROBOTS_PER_ASSESSMENT } from '../config/robots';
 import type { AssessmentQuestion, StoredRobotAssessment, RobotImage, AssessmentSession, RobotFeature } from '@/types';
 import { Bot, Save, Download, ChevronRight, Upload, ExternalLink, User, Brain, Award, Book, AlertTriangle, Info, Braces, PencilRuler, Clipboard, Activity, BrainCircuit } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -20,6 +20,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Separator } from '@/components/ui/separator';
 import MetaData from '@/components/meta-data';
 import confetti from 'canvas-confetti';
+import { RobotCountService } from '@/lib/api-service';
 
 // Helper function to shuffle an array (Fisher-Yates shuffle)
 const shuffleArray = <T,>(array: T[]): T[] => {
@@ -36,6 +37,14 @@ const calculateOverallScore = (values: number[]): number => {
   const sum = values.reduce((acc, val) => acc + val, 0);
   return Math.round(sum / values.length);
 };
+
+export function getRandomRobotsWrapper(count: number = ROBOTS_PER_ASSESSMENT): Promise<RobotImage[]> {
+  // 这个函数返回一个Promise，但不在模块级别直接调用fetch
+  return getRandomRobotsWithCounts(count).catch((error: unknown) => {
+    console.error('获取随机机器人失败，使用备选方法:', error);
+    return getRandomRobots(count);
+  });
+}
 
 export default function RobotVisionaryPage() {
   // 用户信息状态
@@ -110,21 +119,10 @@ export default function RobotVisionaryPage() {
   // 提交用户信息，开始评估并记录开始时间
   const handleUserInfoSubmit = () => {
     // 简单验证
-    if (!userInfo.name || !userInfo.age || !userInfo.gender || !userInfo.major) {
+    if (!userInfo.name) {
       toast({
-        title: "请填写完整信息",
-        description: "所有字段都是必填的",
-        variant: "destructive",
-        duration: 3000,
-      });
-      return;
-    }
-    
-    // 验证年龄是否为数字
-    if (isNaN(Number(userInfo.age)) || Number(userInfo.age) <= 0) {
-      toast({
-        title: "年龄格式错误",
-        description: "请输入有效的年龄数字",
+        title: "请填写姓名",
+        description: "姓名是必填的",
         variant: "destructive",
         duration: 3000,
       });
@@ -150,20 +148,39 @@ export default function RobotVisionaryPage() {
 
   // 初始化: 随机选择机器人和问题
   useEffect(() => {
-    // 随机选择机器人
-    const randomRobots = getRandomRobots(ROBOTS_PER_ASSESSMENT);
-    
-    // 随机排序问题
-    const shuffled = shuffleArray(ALL_QUESTIONS);
-    
-    setSession(prev => ({
-      ...prev,
-      selectedRobots: randomRobots,
-      currentRobotIndex: 0,
-      completedAssessments: []
-    }));
-    
-    setShuffledQuestions(shuffled);
+    const initializeRobots = async () => {
+      try {
+        // 使用包装函数而不是直接调用异步函数
+        const randomRobots = await getRandomRobotsWrapper(ROBOTS_PER_ASSESSMENT);
+        
+        // 随机排序问题
+        const shuffled = shuffleArray(ALL_QUESTIONS);
+        
+        setSession(prev => ({
+          ...prev,
+          selectedRobots: randomRobots,
+          currentRobotIndex: 0,
+          completedAssessments: []
+        }));
+        
+        setShuffledQuestions(shuffled);
+      } catch (error) {
+        console.error('初始化机器人失败:', error);
+        // 失败时使用本地随机
+        const fallbackRobots = getRandomRobots(ROBOTS_PER_ASSESSMENT);
+        
+        setSession(prev => ({
+          ...prev,
+          selectedRobots: fallbackRobots,
+          currentRobotIndex: 0,
+          completedAssessments: []
+        }));
+        
+        setShuffledQuestions(shuffleArray(ALL_QUESTIONS));
+      }
+    };
+
+    initializeRobots();
   }, []);
 
   // 当问题加载后初始化滑块值
@@ -219,6 +236,45 @@ export default function RobotVisionaryPage() {
       description: "现在请回答关于机器人能力的问题",
       duration: 3000,
     });
+  };
+
+  // 五彩纸屑特效函数
+  const triggerConfetti = () => {
+    // 完整版盛大庆祝效果
+    const end = Date.now() + 2000;
+    
+    const colors = ['#4ade80', '#2dd4bf', '#60a5fa', '#c084fc', '#f472b6'];
+    
+    (function frame() {
+      confetti({
+        particleCount: 3,
+        angle: 60,
+        spread: 75,
+        origin: { x: 0, y: 0.8 },
+        colors: colors
+      });
+      confetti({
+        particleCount: 3,
+        angle: 120,
+        spread: 75,
+        origin: { x: 1, y: 0.8 },
+        colors: colors
+      });
+      
+      if (Date.now() < end) {
+        requestAnimationFrame(frame);
+      }
+    }());
+    
+    // 中间再来一波
+    setTimeout(() => {
+      confetti({
+        particleCount: 100,
+        spread: 130,
+        origin: { x: 0.5, y: 0.3 },
+        colors: colors
+      });
+    }, 500);
   };
 
   // 保存当前机器人评估并进入下一个
@@ -332,53 +388,44 @@ export default function RobotVisionaryPage() {
       description: `已导出${session.completedAssessments.length}个机器人的评估数据。`,
       duration: 5000,
     });
+  };
 
-    // 处理五彩纸屑效果 - 只在导出CSV时使用
-    const triggerConfetti = () => {
-      // 完整版盛大庆祝效果
-      const end = Date.now() + 2000;
-      
-      const colors = ['#4ade80', '#2dd4bf', '#60a5fa', '#c084fc', '#f472b6'];
-      
-      (function frame() {
-        confetti({
-          particleCount: 3,
-          angle: 60,
-          spread: 75,
-          origin: { x: 0, y: 0.8 },
-          colors: colors
-        });
-        confetti({
-          particleCount: 3,
-          angle: 120,
-          spread: 75,
-          origin: { x: 1, y: 0.8 },
-          colors: colors
-        });
-        
-        if (Date.now() < end) {
-          requestAnimationFrame(frame);
-        }
-      }());
-      
-      // 中间再来一波
-      setTimeout(() => {
-        confetti({
-          particleCount: 100,
-          spread: 130,
-          origin: { x: 0.5, y: 0.3 },
-          colors: colors
-        });
-      }, 500);
-    };
-
-        triggerConfetti();  };    // 处理五彩纸屑效果 - 只在导出CSV时使用  const triggerConfetti = () => {    // 完整版盛大庆祝效果    const end = Date.now() + 2000;        const colors = ['#4ade80', '#2dd4bf', '#60a5fa', '#c084fc', '#f472b6'];        (function frame() {      confetti({        particleCount: 3,        angle: 60,        spread: 75,        origin: { x: 0, y: 0.8 },        colors: colors      });      confetti({        particleCount: 3,        angle: 120,        spread: 75,        origin: { x: 1, y: 0.8 },        colors: colors      });            if (Date.now() < end) {        requestAnimationFrame(frame);      }    }());        // 中间再来一波    setTimeout(() => {      confetti({        particleCount: 100,        spread: 130,        origin: { x: 0.5, y: 0.3 },        colors: colors      });    }, 500);  };  // 所有机器人评估完成
+  // 所有机器人评估完成
   const isAllCompleted = session.currentRobotIndex >= session.selectedRobots.length;
+  
+  // 当完成所有评估时触发五彩纸屑
+  useEffect(() => {
+    if (isAllCompleted && session.completedAssessments.length > 0) {
+      // 添加一点延迟使界面先渲染出来
+      setTimeout(() => {
+        triggerConfetti();
+      }, 500);
+    }
+  }, [isAllCompleted, session.completedAssessments.length]);
   
   // 计算进度
   const completionPercentage = session.selectedRobots.length > 0
     ? Math.round((session.completedAssessments.length / session.selectedRobots.length) * 100)
     : 0;
+
+  const [remainingCounts, setRemainingCounts] = useState<Record<string, number>>({});
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const loadData = async () => {
+      setLoading(true);
+      try {
+        const data = await RobotCountService.getRemainingCounts();
+        setRemainingCounts(data);
+      } catch (error) {
+        console.error('加载数据失败', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadData();
+  }, []);
 
   return (
     <>
@@ -387,22 +434,44 @@ export default function RobotVisionaryPage() {
       <div className="container mx-auto p-4 md:p-6 lg:p-8">
         {showUserForm ? (
           // 用户信息表单与研究说明
-          <div className="grid md:grid-cols-12 gap-6">
+          <div className="grid md:grid-cols-12 gap-6 max-w-5xl mx-auto">
             <Card className="md:col-span-5 shadow-lg rounded-lg">
               <CardHeader className="bg-gradient-to-r from-primary/10 to-card-foreground/5">
                 <div className="flex items-center">
-                  <User className="h-8 w-8 text-primary mr-3" />
+                  <Clipboard className="h-8 w-8 text-primary mr-3" />
                   <div>
                     <CardTitle className="text-xl font-semibold text-primary">
-                      参与者信息
+                      第一步：问卷填写
                     </CardTitle>
                     <CardDescription>
-                      请先填写您的基本信息再开始评估
+                      请先完成问卷后再进行机器人评估
                     </CardDescription>
                   </div>
                 </div>
               </CardHeader>
               <CardContent className="p-6 space-y-4">
+                <div className="rounded-lg bg-primary/5 p-4 mb-4">
+                  <div className="flex items-start">
+                    <ExternalLink className="h-5 w-5 text-primary mt-0.5 mr-2 flex-shrink-0" />
+                    <p className="text-sm">
+                      请先前往 <a href="https://f.wps.cn/g/X5mjgNpg/" target="_blank" rel="noopener noreferrer" className="text-primary font-medium underline underline-offset-2">https://f.wps.cn/g/X5mjgNpg/</a> 填写问卷。
+                      <span className="block mt-1 text-muted-foreground">填写前请自查是否已完成过问卷。</span>
+                    </p>
+                  </div>
+                </div>
+                
+                <Separator className="my-4" />
+                
+                <div className="flex items-center">
+                  <User className="h-7 w-7 text-primary mr-3" />
+                  <h3 className="text-lg font-semibold text-primary">
+                    第二步：输入姓名
+                  </h3>
+                </div>
+                <p className="text-sm text-muted-foreground mb-3">
+                  完成问卷后输入姓名进行能力评估
+                </p>
+                
                 <div className="space-y-2">
                   <Label htmlFor="username">姓名</Label>
                   <Input 
@@ -410,45 +479,6 @@ export default function RobotVisionaryPage() {
                     placeholder="请输入您的姓名" 
                     value={userInfo.name}
                     onChange={(e) => handleUserInfoChange('name', e.target.value)}
-                  />
-                </div>
-                
-                <div className="space-y-2">
-                  <Label htmlFor="age">年龄</Label>
-                  <Input 
-                    id="age" 
-                    type="number" 
-                    placeholder="请输入您的年龄" 
-                    value={userInfo.age}
-                    onChange={(e) => handleUserInfoChange('age', e.target.value)}
-                  />
-                </div>
-                
-                <div className="space-y-2">
-                  <Label htmlFor="gender">性别</Label>
-                  <Select 
-                    value={userInfo.gender} 
-                    onValueChange={(value) => handleUserInfoChange('gender', value)}
-                  >
-                    <SelectTrigger id="gender">
-                      <SelectValue placeholder="请选择您的性别" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="男">男</SelectItem>
-                      <SelectItem value="女">女</SelectItem>
-                      <SelectItem value="其他">其他</SelectItem>
-                      <SelectItem value="不愿透露">不愿透露</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                
-                <div className="space-y-2">
-                  <Label htmlFor="major">专业</Label>
-                  <Input 
-                    id="major" 
-                    placeholder="请输入您所学的专业" 
-                    value={userInfo.major}
-                    onChange={(e) => handleUserInfoChange('major', e.target.value)}
                   />
                 </div>
                 
@@ -478,23 +508,11 @@ export default function RobotVisionaryPage() {
               <CardContent className="p-6">
                 <div className="space-y-6">
                   <div className="flex items-start space-x-4">
-                    <Brain className="h-10 w-10 text-primary/80 mt-1 flex-shrink-0" />
-                    <div>
-                      <h3 className="text-lg font-semibold text-foreground">研究目标</h3>
-                      <p className="text-muted-foreground">
-                        本研究旨在通过人类对机器人的评估数据，分析人们如何认知和评价不同类型机器人的潜能。您的参与将帮助我们更好地理解人类-机器人交互的认知基础。
-                      </p>
-                    </div>
-                  </div>
-
-                  <Separator />
-                  
-                  <div className="flex items-start space-x-4">
-                    <Clipboard className="h-10 w-10 text-primary/80 mt-1 flex-shrink-0" />
+                    <Activity className="h-10 w-10 text-primary/80 mt-1 flex-shrink-0" />
                     <div>
                       <h3 className="text-lg font-semibold text-foreground">评估流程</h3>
                       <p className="text-muted-foreground">
-                        您将评估3个随机选择的机器人形象，每个机器人需要回答27个关于其各方面潜能的问题。请确保每个问题都经过认真思考后再作答。
+                        您将评估5个随机选择的机器人形象，每个机器人需要回答27个关于其各方面潜能的问题。请确保每个问题都经过认真思考后再作答。
                       </p>
                     </div>
                   </div>
@@ -502,7 +520,7 @@ export default function RobotVisionaryPage() {
                   <Separator />
                   
                   <div className="flex items-start space-x-4">
-                    <Activity className="h-10 w-10 text-primary/80 mt-1 flex-shrink-0" />
+                    <Brain className="h-10 w-10 text-primary/80 mt-1 flex-shrink-0" />
                     <div>
                       <h3 className="text-lg font-semibold text-foreground">数据用途</h3>
                       <p className="text-muted-foreground">
@@ -648,7 +666,7 @@ export default function RobotVisionaryPage() {
                   请勿急于退出，将下载的CSV文件上传到以下WPS表单链接：
                 </p>
                 <a 
-                  href="https://f.wps.cn/g/GTGsCwjw/" 
+                  href="https://f.wps.cn/g/jvdOLD6O/" 
                   target="_blank" 
                   rel="noopener noreferrer" 
                   className="flex items-center justify-center py-5 px-4 w-full bg-accent text-accent-foreground hover:bg-accent/90 rounded-md font-medium text-base"
@@ -680,6 +698,44 @@ export default function RobotVisionaryPage() {
                   </div>
                 </div>
               </div>
+            </CardContent>
+          </Card>
+        )}
+
+        {/* 如果登录了，显示机器人剩余评估次数信息 */}
+        {!showUserForm && !isAllCompleted && (
+          <Card className="mt-6 shadow-lg rounded-lg">
+            <CardHeader className="bg-gradient-to-r from-primary/10 to-card-foreground/5 py-3">
+              <div className="flex items-center">
+                <BrainCircuit className="h-6 w-6 text-primary mr-2" />
+                <CardTitle className="text-lg font-semibold text-primary">机器人评估统计</CardTitle>
+              </div>
+            </CardHeader>
+            <CardContent className="p-4">
+              {loading ? (
+                <p className="text-center text-muted-foreground py-2">加载评估数据中...</p>
+              ) : (
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3">
+                  {Object.keys(remainingCounts).length > 0 ? 
+                    Object.entries(remainingCounts).map(([robotId, remaining]) => {
+                      // 找到对应的机器人名称
+                      const robot = session.selectedRobots.find(r => r.id === robotId);
+                      const robotName = robot ? robot.name : robotId;
+                      
+                      return (
+                        <div key={robotId} className="rounded-lg border p-2 text-center">
+                          <p className="text-sm font-medium truncate" title={robotName}>{robotName}</p>
+                          <p className={`text-xs ${remaining > 0 ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}`}>
+                            剩余: {remaining}次
+                          </p>
+                        </div>
+                      );
+                    }) : (
+                      <p className="col-span-full text-center text-muted-foreground">暂无数据</p>
+                    )
+                  }
+                </div>
+              )}
             </CardContent>
           </Card>
         )}

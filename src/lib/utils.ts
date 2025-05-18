@@ -59,10 +59,10 @@ export function generateCsvContent(data: StoredRobotAssessment[]): string {
     
     return robotAssessment.shuffledQuestionsSnapshot.map((question, index) => {
       return [
-        `"${robotAssessment.userName}"`,
-        robotAssessment.userAge,
-        `"${robotAssessment.userGender}"`,
-        `"${robotAssessment.userMajor}"`,
+        `"${robotAssessment.userName || ""}"`,
+        robotAssessment.userAge || "",
+        `"${robotAssessment.userGender || ""}"`,
+        `"${robotAssessment.userMajor || ""}"`,
         `"${robotAssessment.robotId}"`,
         `"${robotAssessment.robotName}"`,
         `"${robotAssessment.robotImageUrl}"`,
