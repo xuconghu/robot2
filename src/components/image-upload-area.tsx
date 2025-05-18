@@ -38,7 +38,7 @@ export function RobotDisplay({ robot, currentIndex, totalRobots }: RobotDisplayP
         </div>
       </CardHeader>
       <CardContent className="p-4 space-y-3">
-        <div className="aspect-[4/3] w-full bg-muted/50 rounded-md flex items-center justify-center overflow-hidden border-2 border-dashed border-border hover:border-accent transition-colors">
+        <div className="aspect-[4/3] w-full h-[450px] bg-muted/50 rounded-md flex items-center justify-center overflow-hidden border-2 border-dashed border-border hover:border-accent transition-colors">
           {robot ? (
             <div className="relative w-full h-full">
               <Image

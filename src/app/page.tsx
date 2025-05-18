@@ -444,31 +444,33 @@ export default function RobotVisionaryPage() {
     <>
       <MetaData />
       
-      <div className="container mx-auto p-4 md:p-6 lg:p-8">
+   
+
+      <div className="container mx-auto px-4 flex flex-col items-center justify-center py-4 min-h-[calc(100vh-150px)]">
         {showUserForm ? (
           // 用户信息表单与研究说明
-          <div className="grid md:grid-cols-12 gap-6 max-w-6xl mx-auto mt-10">
-            <Card className="md:col-span-6 shadow-lg rounded-lg">
-              <CardHeader className="bg-gradient-to-r from-primary/10 to-card-foreground/5">
+          <div className="grid md:grid-cols-12 gap-5 max-w-[1800px] w-full h-full flex items-stretch my-8">
+            <Card className="md:col-span-6 shadow-xl rounded-lg h-full flex flex-col">
+              <CardHeader className="bg-gradient-to-r from-primary/10 to-card-foreground/5 p-2">
                 <div className="flex items-center">
-                  <Clipboard className="h-8 w-8 text-primary mr-3" />
+                  <Clipboard className="h-6 w-6 text-primary mr-2" />
                   <div>
                     <CardTitle className="text-xl font-semibold text-primary">
                       第一步：问卷填写
                     </CardTitle>
-                    <CardDescription>
+                    <CardDescription className="text-sm">
                       请先完成问卷后再进行机器人评估
                     </CardDescription>
                   </div>
                 </div>
               </CardHeader>
-              <CardContent className="p-6 space-y-4">
+              <CardContent className="p-6 space-y-6 flex-grow">
                 <div className="rounded-lg bg-primary/5 p-4 mb-4">
                   <div className="flex items-start">
-                    <ExternalLink className="h-5 w-5 text-primary mt-0.5 mr-2 flex-shrink-0" />
-                    <p className="text-sm">
+                    <ExternalLink className="h-6 w-6 text-primary mt-0.5 mr-3 flex-shrink-0" />
+                    <p className="text-base">
                       请先前往 <a href="https://f.wps.cn/g/X5mjgNpg/" target="_blank" rel="noopener noreferrer" className="text-primary font-medium underline underline-offset-2">https://f.wps.cn/g/X5mjgNpg/</a> 填写问卷。
-                      <span className="block mt-1 text-muted-foreground">请于问卷中自查是否已参与过。</span>
+                      <span className="block mt-2 text-muted-foreground">请于问卷中自查是否已参与过。</span>
                     </p>
                   </div>
                 </div>
@@ -476,87 +478,92 @@ export default function RobotVisionaryPage() {
                 <Separator className="my-4" />
                 
                 <div className="flex items-center">
-                  <User className="h-7 w-7 text-primary mr-3" />
-                  <h3 className="text-lg font-semibold text-primary">
-                    第二步：输入姓名
-                  </h3>
+                  <User className="h-8 w-8 text-primary mr-3" />
+                  <div>
+                    <CardTitle className="text-lg font-semibold text-primary">
+                      第二步：输入姓名
+                    </CardTitle>
+                    <CardDescription className="text-base">
+                      完成问卷后输入姓名参与本次研究
+                    </CardDescription>
+                  </div>
                 </div>
-                <p className="text-sm text-muted-foreground mb-3">
-                  完成问卷后输入姓名参与本次研究
-                </p>
                 
-                <div className="space-y-2">
-                  <Label htmlFor="username">姓名</Label>
+                <div className="space-y-3 mt-4">
+                  <Label htmlFor="username" className="text-base">姓名</Label>
                   <Input 
                     id="username" 
                     placeholder="请输入您的姓名" 
                     value={userInfo.name}
                     onChange={(e) => handleUserInfoChange('name', e.target.value)}
+                    className="py-6 text-base"
                   />
                 </div>
                 
                 <Button 
                   onClick={handleUserInfoSubmit} 
-                  className="w-full mt-6 py-5 text-base"
+                  className="w-full mt-5 py-6 text-lg"
                 >
                   开始评估
                 </Button>
               </CardContent>
             </Card>
 
-            <Card className="md:col-span-6 shadow-lg rounded-lg">
-              <CardHeader className="bg-gradient-to-r from-primary/10 to-card-foreground/5">
+            <Card className="md:col-span-6 shadow-xl rounded-lg h-full flex flex-col">
+              <CardHeader className="bg-gradient-to-r from-primary/10 to-card-foreground/5 p-2">
                 <div className="flex items-center">
-                  <Info className="h-8 w-8 text-primary mr-3" />
+                  <Info className="h-6 w-6 text-primary mr-2" />
                   <div>
                     <CardTitle className="text-xl font-semibold text-primary">
                       关于本研究
                     </CardTitle>
-                    <CardDescription>
+                    <CardDescription className="text-sm">
                       机器人评估研究项目的背景与目的
                     </CardDescription>
                   </div>
                 </div>
               </CardHeader>
-              <CardContent className="p-6">
+              <CardContent className="p-6 flex-grow">
                 <div className="space-y-6">
-                  <div className="flex items-start space-x-4">
-                    <Activity className="h-10 w-10 text-primary/80 mt-1 flex-shrink-0" />
-                    <div>
-                      <h3 className="text-lg font-semibold text-foreground">评估流程</h3>
-                      <p className="text-muted-foreground">
-                        您将评估5个随机选择的机器人形象，每个机器人需要先对其外观进行评估，然后再回答12个关于其各方面潜能的问题。请确保每个问题都经过认真思考后再作答。
-                      </p>
-                    </div>
-                  </div>
+                    <div className="space-y-6">
+                        <div className="flex items-start space-x-3">
+                          <Activity className="h-8 w-8 text-primary/80 mt-1 flex-shrink-0" />
+                          <div>
+                            <h3 className="text-lg font-semibold text-foreground">评估流程</h3>
+                            <p className="text-base text-muted-foreground mt-1">
+                              您将评估5个随机选择的机器人形象，每个机器人需要先对其外观进行评估，然后再回答12个关于其各方面潜能的问题。请确保每个问题都经过认真思考后再作答。
+                            </p>
+                          </div>
+                        </div>
 
-                  <Separator />
-                  
-                  <div className="flex items-start space-x-4">
-                    <Brain className="h-10 w-10 text-primary/80 mt-1 flex-shrink-0" />
-                    <div>
-                      <h3 className="text-lg font-semibold text-foreground">数据用途</h3>
-                      <p className="text-muted-foreground">
-                        您的评估数据将用于科学研究，帮助我们分析人类对机器人能力的认知模式，并可能为未来机器人设计提供洞见。所有数据将以匿名方式处理。
-                      </p>
-                    </div>
-                  </div>
+                        <Separator className="my-4" />
+                        
+                        <div className="flex items-start space-x-3">
+                          <Brain className="h-8 w-8 text-primary/80 mt-1 flex-shrink-0" />
+                          <div>
+                            <h3 className="text-lg font-semibold text-foreground">数据用途</h3>
+                            <p className="text-base text-muted-foreground mt-1">
+                              您的评估数据将用于科学研究，帮助我们分析人类对机器人能力的认知模式，并可能为未来机器人设计提供洞见。所有数据将以匿名方式处理。
+                            </p>
+                          </div>
+                        </div>
 
-                  <div className="rounded-lg bg-primary/5 p-4 mt-4">
-                    <div className="flex items-start">
-                      <AlertTriangle className="h-5 w-5 text-primary mt-0.5 mr-2 flex-shrink-0" />
-                      <p className="text-sm text-muted-foreground">
-                        <strong>重要提示：</strong> 评估过程中请确保对每个问题都进行评分，未完成所有问题将无法进入下一个机器人的评估。完成所有机器人评估后，请务必导出并提交您的评估数据。
-                      </p>
+                        <div className="rounded-lg bg-primary/5 p-4 mt-6">
+                          <div className="flex items-start">
+                            <AlertTriangle className="h-5 w-5 text-primary mt-0.5 mr-2 flex-shrink-0" />
+                            <p className="text-base text-muted-foreground">
+                              <strong>重要提示：</strong> 评估过程中请确保对每个问题都进行评分，未完成所有问题将无法进入下一个机器人的评估。完成所有机器人评估后，请务必导出并提交您的评估数据。
+                            </p>
+                          </div>
+                        </div>
                     </div>
-                  </div>
                 </div>
               </CardContent>
             </Card>
           </div>
         ) : !isAllCompleted ? (
           // 评估界面
-          <div className="grid md:grid-cols-2 gap-6 lg:gap-8">
+          <div className="grid md:grid-cols-2 gap-6 lg:gap-8 max-w-[1800px] w-full items-center justify-center">
             {session.selectedRobots.length > 0 && (
               <div className="flex flex-col gap-6">
                 <RobotDisplay 
@@ -633,7 +640,7 @@ export default function RobotVisionaryPage() {
           </div>
         ) : (
           // 评估完成界面
-          <Card className="shadow-lg rounded-lg overflow-hidden mb-6">
+          <Card className="shadow-lg rounded-lg overflow-hidden mb-6 max-w-[900px]">
             <CardHeader className="bg-gradient-to-r from-primary/10 to-card-foreground/5">
               <div className="flex items-center">
                 <Award className="h-8 w-8 text-primary mr-3" />
@@ -645,7 +652,7 @@ export default function RobotVisionaryPage() {
                 </div>
               </div>
             </CardHeader>
-            <CardContent className="p-6 space-y-6">
+            <CardContent className="p-6 space-y-5">
               <div className="text-center py-6">
                 <Bot className="mx-auto h-16 w-16 text-accent mb-4" />
                 <h2 className="text-2xl font-bold mb-2">感谢您的参与！</h2>
@@ -714,45 +721,9 @@ export default function RobotVisionaryPage() {
             </CardContent>
           </Card>
         )}
-
-        {/* 如果登录了，显示机器人剩余评估次数信息 */}
-        {!showUserForm && !isAllCompleted && (
-          <Card className="mt-6 shadow-lg rounded-lg">
-            <CardHeader className="bg-gradient-to-r from-primary/10 to-card-foreground/5 py-3">
-              <div className="flex items-center">
-                <BrainCircuit className="h-6 w-6 text-primary mr-2" />
-                <CardTitle className="text-lg font-semibold text-primary">机器人评估统计</CardTitle>
-              </div>
-            </CardHeader>
-            <CardContent className="p-4">
-              {loading ? (
-                <p className="text-center text-muted-foreground py-2">加载评估数据中...</p>
-              ) : (
-                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3">
-                  {Object.keys(remainingCounts).length > 0 ? 
-                    Object.entries(remainingCounts).map(([robotId, remaining]) => {
-                      // 找到对应的机器人名称
-                      const robot = session.selectedRobots.find(r => r.id === robotId);
-                      const robotName = robot ? robot.name : robotId;
-                      
-                      return (
-                        <div key={robotId} className="rounded-lg border p-2 text-center">
-                          <p className="text-sm font-medium truncate" title={robotName}>{robotName}</p>
-                          <p className={`text-xs ${remaining > 0 ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}`}>
-                            剩余: {remaining}次
-                          </p>
-                        </div>
-                      );
-                    }) : (
-                      <p className="col-span-full text-center text-muted-foreground">暂无数据</p>
-                    )
-                  }
-                </div>
-              )}
-            </CardContent>
-          </Card>
-        )}
       </div>
+      
+
     </>
   );
 }

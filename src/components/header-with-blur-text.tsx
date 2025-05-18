@@ -21,7 +21,7 @@ export default function HeaderWithBlurText() {
   }, []);
 
   return (
-    <header className="relative overflow-hidden bg-slate-900 text-white py-5 px-8 shadow-lg">
+    <header className="relative overflow-hidden bg-slate-900 text-white py-3 px-8 shadow-lg">
       {/* 动态背景渐变 - 极光风格 */}
       <motion.div 
         className="absolute inset-0 opacity-50"

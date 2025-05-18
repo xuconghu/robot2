@@ -69,7 +69,7 @@ export function FeaturesPanel({ features, onFeaturesChange, onComplete }: Featur
   }, [totalSelected, features.length]);
 
   return (
-    <Card className="w-full shadow-md overflow-hidden">
+    <Card className="w-full shadow-md overflow-hidden h-full flex flex-col">
       <CardHeader className="bg-gradient-to-r from-primary/10 to-primary/5 py-3">
         <CardTitle className="text-lg flex items-center">
           <span>机器人外观特征识别</span>
@@ -84,7 +84,7 @@ export function FeaturesPanel({ features, onFeaturesChange, onComplete }: Featur
           <Progress value={progressValue} className="h-2" />
         </div>
       </CardHeader>
-      <CardContent className="p-3">
+      <CardContent className="p-3 flex-grow overflow-y-auto">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-x-3 gap-y-2">
           {features.map((feature) => (
             <motion.div 
