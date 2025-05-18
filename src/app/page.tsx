@@ -324,6 +324,19 @@ export default function RobotVisionaryPage() {
       currentRobotIndex: prev.currentRobotIndex + 1
     }));
 
+    // 更新后端机器人评估计数
+    RobotCountService.updateRobotCounts([currentRobot.id])
+      .then(success => {
+        if (success) {
+          console.log(`已更新机器人 ${currentRobot.id} 的评估计数`);
+        } else {
+          console.warn(`无法更新机器人 ${currentRobot.id} 的评估计数`);
+        }
+      })
+      .catch(error => {
+        console.error(`更新机器人评估计数时出错:`, error);
+      });
+
     // 重置滑块值为初始值
     setSliderValues(shuffledQuestions.map(() => INITIAL_SLIDER_VALUE));
     
