@@ -447,8 +447,8 @@ export default function RobotVisionaryPage() {
       <div className="container mx-auto p-4 md:p-6 lg:p-8">
         {showUserForm ? (
           // 用户信息表单与研究说明
-          <div className="grid md:grid-cols-12 gap-6 max-w-5xl mx-auto">
-            <Card className="md:col-span-5 shadow-lg rounded-lg">
+          <div className="grid md:grid-cols-12 gap-6 max-w-6xl mx-auto mt-10">
+            <Card className="md:col-span-6 shadow-lg rounded-lg">
               <CardHeader className="bg-gradient-to-r from-primary/10 to-card-foreground/5">
                 <div className="flex items-center">
                   <Clipboard className="h-8 w-8 text-primary mr-3" />
@@ -504,7 +504,7 @@ export default function RobotVisionaryPage() {
               </CardContent>
             </Card>
 
-            <Card className="md:col-span-7 shadow-lg rounded-lg">
+            <Card className="md:col-span-6 shadow-lg rounded-lg">
               <CardHeader className="bg-gradient-to-r from-primary/10 to-card-foreground/5">
                 <div className="flex items-center">
                   <Info className="h-8 w-8 text-primary mr-3" />
@@ -525,7 +525,7 @@ export default function RobotVisionaryPage() {
                     <div>
                       <h3 className="text-lg font-semibold text-foreground">评估流程</h3>
                       <p className="text-muted-foreground">
-                        您将评估5个随机选择的机器人形象，每个机器人需要回答27个关于其各方面潜能的问题。请确保每个问题都经过认真思考后再作答。
+                        您将评估5个随机选择的机器人形象，每个机器人需要先对其外观进行评估，然后再回答12个关于其各方面潜能的问题。请确保每个问题都经过认真思考后再作答。
                       </p>
                     </div>
                   </div>
