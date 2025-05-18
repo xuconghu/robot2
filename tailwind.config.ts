@@ -1,4 +1,5 @@
 import type { Config } from "tailwindcss";
+import { fontFamily } from "tailwindcss/defaultTheme";
 
 export default {
     darkMode: ["class"],
@@ -8,6 +9,19 @@ export default {
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
+  	container: {
+  		center: true,
+  		padding: {
+  			DEFAULT: "1rem",
+  			sm: "2rem",
+  			lg: "4rem",
+  			xl: "5rem",
+  			"2xl": "6rem",
+  		},
+  		screens: {
+  			"2xl": "1400px",
+  		},
+  	},
   	extend: {
   		colors: {
   			background: 'hsl(var(--background))',
@@ -66,6 +80,9 @@ export default {
   			md: 'calc(var(--radius) - 2px)',
   			sm: 'calc(var(--radius) - 4px)'
   		},
+  		fontFamily: {
+  			sans: ["var(--font-sans)", ...fontFamily.sans],
+  		},
   		keyframes: {
   			'accordion-down': {
   				from: {
@@ -82,11 +99,16 @@ export default {
   				to: {
   					height: '0'
   				}
-  			}
+  			},
+  			'pulse-slow': {
+  				'0%, 100%': { opacity: '0.4' },
+  				'50%': { opacity: '0.8' },
+  			},
   		},
   		animation: {
   			'accordion-down': 'accordion-down 0.2s ease-out',
-  			'accordion-up': 'accordion-up 0.2s ease-out'
+  			'accordion-up': 'accordion-up 0.2s ease-out',
+  			'pulse-slow': 'pulse-slow 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
   		}
   	}
   },

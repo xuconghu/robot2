@@ -5,6 +5,12 @@ export interface AssessmentQuestion {
   text: string;           // The specific question text, e.g., '它可以观察周围环境。'
 }
 
+export interface RobotFeature {
+  id: string;
+  label: string;
+  value: string; // "是" | "否" | ""
+}
+
 export interface RobotImage {
   id: string;
   filename: string;
@@ -24,6 +30,7 @@ export interface StoredRobotAssessment {
   userGender: string;
   userMajor: string;
   assessmentDuration: number; // 评估耗时（秒）
+  features?: RobotFeature[]; // 添加特征评估数据
 }
 
 export interface AssessmentSession {

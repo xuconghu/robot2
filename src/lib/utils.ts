@@ -13,6 +13,18 @@ export function generateCsvContent(data: StoredRobotAssessment[]): string {
     return "";
   }
 
+  // 获取所有特征的ID，用于生成表头
+  const allFeatureIds = new Set<string>();
+  data.forEach(assessment => {
+    if (assessment.features && assessment.features.length > 0) {
+      assessment.features.forEach(feature => {
+        allFeatureIds.add(feature.id);
+      });
+    }
+  });
+  
+  const featureColumns = Array.from(allFeatureIds);
+
   const header = [
     "用户姓名 (UserName)",
     "用户年龄 (UserAge)",
@@ -24,6 +36,8 @@ export function generateCsvContent(data: StoredRobotAssessment[]): string {
     "评估时间戳 (Timestamp)",
     "评估耗时(秒) (AssessmentDuration)",
     "机器人综合评分 (OverallRobotScore)",
+    // 添加特征列表头
+    ...featureColumns.map(id => `特征_${id} (Feature_${id})`),
     "问题ID (QuestionID)",
     "问题分类 (Category)",
     "问题子分类 (SubCategory)",
@@ -32,6 +46,17 @@ export function generateCsvContent(data: StoredRobotAssessment[]): string {
   ];
 
   const rows = data.flatMap((robotAssessment) => {
+    // 创建一个特征ID到特征值的映射
+    const featureMap: Record<string, string> = {};
+    if (robotAssessment.features && robotAssessment.features.length > 0) {
+      robotAssessment.features.forEach(feature => {
+        featureMap[feature.id] = feature.value;
+      });
+    }
+    
+    // 为每个特征ID生成对应的值
+    const featureValues = featureColumns.map(id => `"${featureMap[id] || ""}"`);
+    
     return robotAssessment.shuffledQuestionsSnapshot.map((question, index) => {
       return [
         `"${robotAssessment.userName}"`,
@@ -44,6 +69,8 @@ export function generateCsvContent(data: StoredRobotAssessment[]): string {
         `"${robotAssessment.timestamp}"`,
         robotAssessment.assessmentDuration || 0,
         robotAssessment.overallScore,
+        // 添加特征值
+        ...featureValues,
         `"${question.id}"`,
         `"${question.category}"`,
         `"${question.subCategory}"`,

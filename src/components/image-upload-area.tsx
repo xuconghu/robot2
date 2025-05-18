@@ -26,13 +26,18 @@ export function RobotDisplay({ robot, currentIndex, totalRobots }: RobotDisplayP
 
   return (
     <Card className="shadow-lg rounded-lg overflow-hidden">
-      <CardHeader className="bg-card-foreground/5">
-        <CardTitle className="text-xl font-semibold text-primary">当前机器人</CardTitle>
-        <CardDescription>
-          {robot ? `正在评估: ${robot.name} (${currentIndex + 1}/${totalRobots})` : '准备中...'}
-        </CardDescription>
+      <CardHeader className="bg-gradient-to-r from-primary/10 to-card-foreground/5 py-3">
+        <div className="flex items-center">
+          <Bot className="h-6 w-6 text-primary mr-2" />
+          <div>
+            <CardTitle className="text-lg font-semibold text-primary">当前机器人</CardTitle>
+            <CardDescription>
+              {robot ? `正在评估: ${robot.name} (${currentIndex + 1}/${totalRobots})` : '准备中...'}
+            </CardDescription>
+          </div>
+        </div>
       </CardHeader>
-      <CardContent className="p-6 space-y-4">
+      <CardContent className="p-4 space-y-3">
         <div className="aspect-[4/3] w-full bg-muted/50 rounded-md flex items-center justify-center overflow-hidden border-2 border-dashed border-border hover:border-accent transition-colors">
           {robot ? (
             <div className="relative w-full h-full">
