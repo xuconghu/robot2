@@ -468,7 +468,7 @@ export default function RobotVisionaryPage() {
                     <ExternalLink className="h-5 w-5 text-primary mt-0.5 mr-2 flex-shrink-0" />
                     <p className="text-sm">
                       请先前往 <a href="https://f.wps.cn/g/X5mjgNpg/" target="_blank" rel="noopener noreferrer" className="text-primary font-medium underline underline-offset-2">https://f.wps.cn/g/X5mjgNpg/</a> 填写问卷。
-                      <span className="block mt-1 text-muted-foreground">填写前请自查是否已完成过问卷。</span>
+                      <span className="block mt-1 text-muted-foreground">请于问卷中自查是否已参与过。</span>
                     </p>
                   </div>
                 </div>
@@ -482,7 +482,7 @@ export default function RobotVisionaryPage() {
                   </h3>
                 </div>
                 <p className="text-sm text-muted-foreground mb-3">
-                  完成问卷后输入姓名进行能力评估
+                  完成问卷后输入姓名参与本次研究
                 </p>
                 
                 <div className="space-y-2">
