@@ -38,7 +38,7 @@ const calculateOverallScore = (values: number[]): number => {
   return Math.round(sum / values.length);
 };
 
-export function getRandomRobotsWrapper(count: number = ROBOTS_PER_ASSESSMENT): Promise<RobotImage[]> {
+function getRandomRobotsWrapper(count: number = ROBOTS_PER_ASSESSMENT): Promise<RobotImage[]> {
   // 这个函数返回一个Promise，但不在模块级别直接调用fetch
   return getRandomRobotsWithCounts(count).catch((error: unknown) => {
     console.error('获取随机机器人失败，使用备选方法:', error);
