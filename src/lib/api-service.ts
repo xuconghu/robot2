@@ -1,8 +1,8 @@
 // 后端API服务地址
-const API_URL = 'https://api.xuconghu.top';
+const API_URL = 'http://api.xuconghu.top';
 
 // 最大评估次数限制
-export const MAX_ASSESSMENT_COUNT = 15;
+export const MAX_ASSESSMENT_COUNT = 5;
 
 // 机器人评估计数API服务
 export const RobotCountService = {
@@ -63,7 +63,7 @@ export const RobotCountService = {
     }
   },
 
-  // 获取可用的机器人ID（评估次数少于15次的）
+  // 获取可用的机器人ID（评估次数少于上限次的）
   async getAvailableRobots(): Promise<string[]> {
     try {
       const response = await fetch(`${API_URL}/api/available-robots`);

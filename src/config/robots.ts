@@ -315,21 +315,25 @@ export const ROBOT_IMAGES: RobotImage[] = ALL_ROBOT_IMAGES.filter(robot =>
   SELECTED_ROBOT_IDS.includes(robot.id)
 );
 
-// 随机选择指定数量的机器人，优先选择评估次数少于MAX_ASSESSMENT_COUNT次的机器人
+// 随机选择指定数量的机器人，从所有未达到评估上限的机器人中完全随机抽取
 export async function getRandomRobotsWithCounts(count: number = ROBOTS_PER_ASSESSMENT): Promise<RobotImage[]> {
   try {
-    // 获取可用的机器人ID列表（评估次数少于MAX_ASSESSMENT_COUNT次的）
-    const availableRobotIds = await RobotCountService.getAvailableRobots();
+    // 获取所有机器人的评估次数
+    const robotCounts = await RobotCountService.getRobotCounts();
     
-    // 过滤出可用的机器人
-    let availableRobots = ROBOT_IMAGES.filter(robot => 
-      availableRobotIds.includes(robot.id)
+    // 所有选定的机器人列表
+    const allSelectedRobots = [...ROBOT_IMAGES];
+    
+    // 过滤出所有评估次数低于上限的机器人
+    // 如果一个机器人从未被评估过，在robotCounts中就不存在记录，应该被包含在可选列表中
+    const availableRobots = allSelectedRobots.filter(robot => 
+      !robotCounts[robot.id] || robotCounts[robot.id] < MAX_ASSESSMENT_COUNT
     );
     
-    // 如果可用机器人不足，使用所有机器人（可能有些已达到MAX_ASSESSMENT_COUNT次评估）
-    if (availableRobots.length < count) {
-      console.warn(`可用机器人不足，将使用全部机器人池 (需要${count}个，可用${availableRobots.length}个)`);
-      availableRobots = [...ROBOT_IMAGES];
+    // 如果没有可用机器人，使用所有机器人
+    if (availableRobots.length === 0) {
+      console.warn('没有可用的机器人，将使用全部机器人池');
+      return getRandomRobots(count);
     }
     
     // 确保不要尝试选择比可用机器人更多的数量
@@ -348,7 +352,7 @@ export async function getRandomRobotsWithCounts(count: number = ROBOTS_PER_ASSES
     return shuffled.slice(0, selectCount);
     
   } catch (error) {
-    console.error('获取带计数的随机机器人失败，使用本地随机选择:', error);
+    console.error('获取随机机器人失败，使用本地随机选择:', error);
     // 发生错误时回退到原始的随机选择
     return getRandomRobots(count);
   }
