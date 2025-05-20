@@ -64,8 +64,8 @@ export function AssessmentPanel({
   }, [robotsAssessedCount, currentAssessmentId]);
 
   return (
-    <Card className="shadow-lg rounded-lg overflow-hidden flex flex-col">
-      <CardHeader className="bg-slate-50 dark:bg-slate-900/50 py-3">
+    <Card className="shadow-lg rounded-lg overflow-hidden flex flex-col h-full">
+      <CardHeader className="bg-slate-50 dark:bg-slate-900/50 py-3 flex-shrink-0">
         <CardTitle className="text-lg font-semibold text-primary">能力评估</CardTitle>
         <CardDescription className="text-sm text-muted-foreground">请根据以下标准，对机器人的各项潜能进行评分。</CardDescription>
         
@@ -81,7 +81,7 @@ export function AssessmentPanel({
         </div>
       </CardHeader>
 
-      <CardContent ref={contentRef} className="flex-grow space-y-5 p-4 overflow-y-auto max-h-[calc(100vh-19rem)]">
+      <CardContent ref={contentRef} className="flex-grow space-y-5 p-4 overflow-y-auto" style={{ maxHeight: "calc(100vh - 220px)" }}>
         {questions.map((question, index) => (
           <div key={question.id} className="space-y-2 first:pt-0">
             <Label htmlFor={question.id} className="text-base font-medium block text-foreground mb-1">
@@ -118,8 +118,7 @@ export function AssessmentPanel({
           </div>
         ))}
       </CardContent>
-      <Separator />
-      <CardFooter className="flex flex-col items-start p-4 bg-slate-50 dark:bg-slate-900/50">
+      <Separator className="flex-shrink-0" />      <CardFooter className="flex flex-col items-start p-4 bg-slate-50 dark:bg-slate-900/50 flex-shrink-0">
         {isAssessmentActive && questions.length > 0 && sliderValues.length === questions.length && (
           <div className="w-full">
             <h3 className="text-lg font-semibold text-primary mb-2">当前答题进度</h3>

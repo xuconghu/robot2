@@ -1,5 +1,5 @@
 // 后端API服务地址
-const API_URL = 'https://rapid-shape-8021.huxucong0237.workers.dev';
+const API_URL = 'http://114.55.111.21:3000';
 
 // 最大评估次数限制
 export const MAX_ASSESSMENT_COUNT = 15;
