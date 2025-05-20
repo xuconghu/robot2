@@ -1,5 +1,5 @@
 // 后端API服务地址
-const API_URL = 'http://114.55.111.21:3000';
+const API_URL = 'https://ends-compact-thumbnails-tan.trycloudflare.com';
 
 // 最大评估次数限制
 export const MAX_ASSESSMENT_COUNT = 15;
