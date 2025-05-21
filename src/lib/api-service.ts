@@ -1,5 +1,5 @@
 // 后端API服务地址
-const API_URL = 'http://api.xuconghu.top';
+const API_URL = 'https://api.xuconghu.top';
 
 // 最大评估次数限制
 export const MAX_ASSESSMENT_COUNT = 5;
