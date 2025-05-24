@@ -20,7 +20,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Separator } from '@/components/ui/separator';
 import MetaData from '@/components/meta-data';
 import confetti from 'canvas-confetti';
-import { RobotCountService } from '@/lib/api-service';
+import { RobotCountService, MAX_ASSESSMENT_COUNT } from '@/lib/api-service';import { ROBOT_IMAGES } from '@/config/robots';
 
 // Helper function to shuffle an array (Fisher-Yates shuffle)
 const shuffleArray = <T,>(array: T[]): T[] => {
@@ -277,8 +277,64 @@ export default function RobotVisionaryPage() {
     }, 500);
   };
 
+  // 检查并替换不可用的机器人
+  const checkAndReplaceUnavailableRobots = async (currentIndex: number, selectedRobots: RobotImage[]): Promise<RobotImage[]> => {
+    try {
+      // 获取当前所有机器人的评估次数
+      const robotCounts = await RobotCountService.getRobotCounts();
+      
+      // 检查从当前索引开始的剩余机器人
+      const updatedRobots = [...selectedRobots];
+      let needsReplacement = false;
+      
+      for (let i = currentIndex; i < updatedRobots.length; i++) {
+        const robot = updatedRobots[i];
+        const currentCount = robotCounts[robot.id] || 0;
+        
+        // 如果机器人已达到评估上限，需要替换
+        if (currentCount >= MAX_ASSESSMENT_COUNT) {
+          console.log(`机器人 ${robot.id} 已达到评估上限 (${currentCount}/${MAX_ASSESSMENT_COUNT})，正在寻找替代...`);
+          
+          // 获取所有可用的机器人
+          const availableRobots = ROBOT_IMAGES.filter(availableRobot => 
+            !robotCounts[availableRobot.id] || robotCounts[availableRobot.id] < MAX_ASSESSMENT_COUNT
+          );
+          
+          // 排除已经在当前选择列表中的机器人
+          const availableReplacements = availableRobots.filter(availableRobot =>
+            !updatedRobots.some(selectedRobot => selectedRobot.id === availableRobot.id)
+          );
+          
+          if (availableReplacements.length > 0) {
+            // 随机选择一个替代机器人
+            const randomIndex = Math.floor(Math.random() * availableReplacements.length);
+            const replacementRobot = availableReplacements[randomIndex];
+            updatedRobots[i] = replacementRobot;
+            needsReplacement = true;
+            console.log(`已将机器人 ${robot.id} 替换为 ${replacementRobot.id}`);
+          } else {
+            console.warn(`没有可用的替代机器人来替换 ${robot.id}`);
+          }
+        }
+      }
+      
+      if (needsReplacement) {
+        toast({
+          title: "机器人已更新",
+          description: "部分机器人已达到评估上限，已自动替换为可用机器人",
+          duration: 4000,
+        });
+      }
+      
+      return updatedRobots;
+    } catch (error) {
+      console.error('检查机器人可用性时出错:', error);
+      return selectedRobots; // 出错时返回原列表
+    }
+  };
+
   // 保存当前机器人评估并进入下一个
-  const handleSaveAndNext = () => {
+  const handleSaveAndNext = async () => {
     if (!currentRobot || shuffledQuestions.length === 0 || sliderValues.length !== shuffledQuestions.length) {
       toast({
         title: "错误",
@@ -317,25 +373,33 @@ export default function RobotVisionaryPage() {
       features: [...robotFeatures]
     };
 
-    // 保存当前评估
+    const nextRobotIndex = session.currentRobotIndex + 1;
+
+    // 更新后端机器人评估计数
+    try {
+      const success = await RobotCountService.updateRobotCounts([currentRobot.id]);
+      if (success) {
+        console.log(`已更新机器人 ${currentRobot.id} 的评估计数`);
+      } else {
+        console.warn(`无法更新机器人 ${currentRobot.id} 的评估计数`);
+      }
+    } catch (error) {
+      console.error(`更新机器人评估计数时出错:`, error);
+    }
+
+    // 检查并替换不可用的机器人（如果还有下一个机器人的话）
+    let updatedSelectedRobots = session.selectedRobots;
+    if (nextRobotIndex < session.selectedRobots.length) {
+      updatedSelectedRobots = await checkAndReplaceUnavailableRobots(nextRobotIndex, session.selectedRobots);
+    }
+
+    // 保存当前评估并更新会话状态
     setSession(prev => ({
       ...prev,
       completedAssessments: [...prev.completedAssessments, currentAssessment],
-      currentRobotIndex: prev.currentRobotIndex + 1
+      currentRobotIndex: nextRobotIndex,
+      selectedRobots: updatedSelectedRobots
     }));
-
-    // 更新后端机器人评估计数
-    RobotCountService.updateRobotCounts([currentRobot.id])
-      .then(success => {
-        if (success) {
-          console.log(`已更新机器人 ${currentRobot.id} 的评估计数`);
-        } else {
-          console.warn(`无法更新机器人 ${currentRobot.id} 的评估计数`);
-        }
-      })
-      .catch(error => {
-        console.error(`更新机器人评估计数时出错:`, error);
-      });
 
     // 重置滑块值为初始值
     setSliderValues(shuffledQuestions.map(() => INITIAL_SLIDER_VALUE));
