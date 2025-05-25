@@ -22,34 +22,22 @@ export const ROBOTS_PER_ASSESSMENT = 5;
   // 您可以根据需要更新此列表
 
   const SELECTED_ROBOT_IDS = [
-    'robot001', 'robot002', 'robot003', 'robot004', 'robot005', 'robot006', 'robot007', 'robot008', 'robot009', 'robot011',
-    'robot012', 'robot013', 'robot014', 'robot015', 'robot016', 'robot017', 'robot018', 'robot019', 'robot020',
-    'robot021', 'robot022', 'robot023', 'robot024', 'robot025', 'robot026', 'robot027', 'robot028', 'robot029', 'robot030',
-    'robot031', 'robot032', 'robot033', 'robot034', 'robot036', 'robot037', 'robot038', 'robot040',
-    'robot041', 'robot042', 'robot043', 'robot044', 'robot046', 'robot047', 'robot048', 'robot050',
-    'robot051', 'robot052', 'robot053', 'robot054', 'robot055', 'robot056', 'robot057', 'robot058', 'robot059', 'robot060',
-    'robot061', 'robot062', 'robot063', 'robot066', 'robot067', 'robot068', 'robot069', 'robot070',
-    'robot071', 'robot073', 'robot074', 'robot075', 'robot076', 'robot077', 'robot078', 'robot079', 'robot080',
-    'robot081', 'robot082', 'robot083', 'robot084', 'robot085', 'robot086', 'robot087', 'robot088', 'robot089', 'robot090',
-    'robot091', 'robot092', 'robot094', 'robot095', 'robot097', 'robot098', 'robot099', 'robot100',
-    'robot101', 'robot102', 'robot103', 'robot105', 'robot106', 'robot107', 'robot108', 'robot109',
-    'robot111', 'robot112', 'robot113', 'robot114', 'robot115', 'robot116', 'robot117', 'robot118', 'robot119', 'robot120',
-    'robot121', 'robot123', 'robot125', 'robot126', 'robot127', 'robot128', 'robot129', 'robot130',
-    'robot131', 'robot132', 'robot133', 'robot134', 'robot135', 'robot136', 'robot137', 'robot138', 'robot139', 'robot140',
-    'robot141', 'robot142', 'robot143', 'robot145', 'robot146', 'robot147', 'robot148', 'robot149', 'robot150',
-    'robot151', 'robot152', 'robot153', 'robot154', 'robot155', 'robot156', 'robot157', 'robot158', 'robot159', 'robot160',
-    'robot161', 'robot163', 'robot164', 'robot165', 'robot166', 'robot167', 'robot169', 'robot170',
-    'robot172', 'robot173', 'robot174', 'robot177', 'robot178', 'robot179', 'robot180',
-    'robot181', 'robot183', 'robot184', 'robot185', 'robot186', 'robot187', 'robot188', 'robot190',
-    'robot191', 'robot192', 'robot194', 'robot195', 'robot197', 'robot199', 'robot200',
-    'robot201', 'robot202', 'robot203', 'robot204', 'robot205', 'robot207', 'robot208', 'robot209', 'robot210',
-    'robot213', 'robot214', 'robot216', 'robot217', 'robot218', 'robot219', 'robot220',
-    'robot221', 'robot222', 'robot223', 'robot224', 'robot226', 'robot227', 'robot228', 'robot229', 'robot230',
-    'robot231', 'robot232', 'robot233', 'robot234', 'robot235', 'robot236', 'robot237', 'robot238', 'robot239', 'robot240',
-    'robot241', 'robot242', 'robot243', 'robot244', 'robot245', 'robot246', 'robot247', 'robot248', 'robot249', 'robot250',
-    'robot251'
+    'robot001', 'robot003', 'robot004', 'robot009', 'robot011', 'robot012', 'robot013', 'robot014', 'robot016', 'robot018',
+    'robot019', 'robot020', 'robot021', 'robot022', 'robot025', 'robot028', 'robot029', 'robot030', 'robot031', 'robot032',
+    'robot034', 'robot037', 'robot040', 'robot041', 'robot044', 'robot051', 'robot052', 'robot056', 'robot057', 'robot059',
+    'robot060', 'robot062', 'robot063', 'robot069', 'robot070', 'robot071', 'robot073', 'robot074', 'robot075', 'robot077',
+    'robot079', 'robot080', 'robot081', 'robot082', 'robot083', 'robot086', 'robot087', 'robot088', 'robot090', 'robot095',
+    'robot098', 'robot099', 'robot101', 'robot103', 'robot105', 'robot106', 'robot107', 'robot108', 'robot111', 'robot112',
+    'robot116', 'robot118', 'robot119', 'robot120', 'robot121', 'robot123', 'robot125', 'robot126', 'robot127', 'robot129',
+    'robot130', 'robot131', 'robot132', 'robot133', 'robot135', 'robot136', 'robot137', 'robot138', 'robot139', 'robot140',
+    'robot141', 'robot142', 'robot143', 'robot145', 'robot146', 'robot148', 'robot149', 'robot150', 'robot152', 'robot155',
+    'robot157', 'robot158', 'robot159', 'robot160', 'robot163', 'robot164', 'robot170', 'robot172', 'robot174', 'robot177',
+    'robot179', 'robot183', 'robot184', 'robot185', 'robot186', 'robot188', 'robot190', 'robot191', 'robot195', 'robot199',
+    'robot200', 'robot202', 'robot203', 'robot204', 'robot207', 'robot210', 'robot213', 'robot214', 'robot217', 'robot218',
+    'robot219', 'robot220', 'robot221', 'robot222', 'robot223', 'robot224', 'robot226', 'robot227', 'robot228', 'robot230',
+    'robot231', 'robot233', 'robot236', 'robot237', 'robot238', 'robot239', 'robot240', 'robot241', 'robot242', 'robot243',
+    'robot245', 'robot247', 'robot248'
   ];
-  
 
 
 // ============================================================
