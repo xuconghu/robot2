@@ -23,7 +23,7 @@ export const ROBOTS_PER_ASSESSMENT = 5;
 
   const SELECTED_ROBOT_IDS = [
     'robot001', 'robot003', 'robot004', 'robot009', 'robot011', 'robot012', 'robot013', 'robot014', 'robot016', 'robot018',
-    'robot019', 'robot020', 'robot021', 'robot022', 'robot025', 'robot028', 'robot029', 'robot030', 'robot031', 'robot032',
+    'robot019', 'robot020', 'robot021', 'robot025', 'robot028', 'robot029', 'robot030', 'robot031', 'robot032',
     'robot034', 'robot037', 'robot040', 'robot041', 'robot044', 'robot051', 'robot052', 'robot056', 'robot057', 'robot059',
     'robot060', 'robot062', 'robot063', 'robot069', 'robot070', 'robot071', 'robot073', 'robot074', 'robot075', 'robot077',
     'robot079', 'robot080', 'robot081', 'robot082', 'robot083', 'robot086', 'robot087', 'robot088', 'robot090', 'robot095',
