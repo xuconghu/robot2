@@ -41,7 +41,7 @@ export const ROBOTS_PER_ASSESSMENT = 5;
     'robot126', 'robot127', 'robot128', 'robot129', 'robot130', 'robot132', 'robot133',
     'robot134', 'robot135', 'robot136', 'robot137', 'robot139', 'robot140', 'robot141',
     'robot142', 'robot143', 'robot144', 'robot145', 'robot146', 'robot147', 'robot148',
-    'robot149', 'robot151', 'robot152', 'robot153', 'robot154', 'robot155', 'robot156',
+    'robot149', 'robot151', 'robot152', 'robot153', 'robot154', 'robot156',
     'robot157', 'robot158', 'robot159', 'robot161', 'robot162', 'robot164', 'robot165',
     'robot166', 'robot167', 'robot168', 'robot169', 'robot170', 'robot171', 'robot172',
     'robot173', 'robot174', 'robot175', 'robot176', 'robot177', 'robot178', 'robot179',
