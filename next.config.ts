@@ -22,7 +22,7 @@ const nextConfig: NextConfig = {
   // 静态导出设置
   output: 'export',
   // 使用仓库名作为basePath
-  basePath: '/test222',
+  basePath: '/robot2',
   // 禁用基于服务器的特性
   trailingSlash: true,
 };
