@@ -19,7 +19,8 @@ try {
     });
 
   const robotImages = robotFiles.map((filename, index) => {
-    const id = `robot${(index + 1).toString().padStart(3, '0')}`;
+    // 使用robot301-robot349编号范围，避免与历史数据冲突
+    const id = `robot${(index + 301).toString().padStart(3, '0')}`;
     
     // 从文件名提取机器人名称
     // 假设文件名格式为: 数字_名称.jpg
