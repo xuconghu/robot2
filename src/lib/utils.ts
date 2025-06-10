@@ -106,7 +106,7 @@ export function getBasePath() {
   if (typeof window !== 'undefined') {
     // 判断是否在GitHub Pages上运行
     if (window.location.hostname.includes('github.io')) {
-      return '/test222';
+      return '/robot2';
     }
     
     // 处理自定义域名情况 (zhishiweilai.com)
