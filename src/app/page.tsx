@@ -533,7 +533,7 @@ export default function RobotVisionaryPage() {
                   <div className="flex items-start">
                     <ExternalLink className="h-6 w-6 text-primary mt-0.5 mr-3 flex-shrink-0" />
                     <p className="text-base">
-                      请先前往 <a href="https://f.wps.cn/g/X5mjgNpg/" target="_blank" rel="noopener noreferrer" className="text-primary font-medium underline underline-offset-2">https://f.wps.cn/g/X5mjgNpg/</a> 填写问卷。
+                      请先前往 <a href="https://f.wps.cn/g/HNWs9rHw/" target="_blank" rel="noopener noreferrer" className="text-primary font-medium underline underline-offset-2">https://f.wps.cn/g/HNWs9rHw/</a> 填写问卷。
                       <span className="block mt-2 text-muted-foreground">请于问卷中自查是否已参与过。</span>
                     </p>
                   </div>
@@ -750,7 +750,7 @@ export default function RobotVisionaryPage() {
                   请勿急于退出，将下载的CSV文件上传到以下WPS表单链接：
                 </p>
                 <a 
-                  href="https://f.wps.cn/g/jvdOLD6O/" 
+                  href="https://f.wps.cn/g/1Nwmw22S/" 
                   target="_blank" 
                   rel="noopener noreferrer" 
                   className="flex items-center justify-center py-5 px-4 w-full bg-accent text-accent-foreground hover:bg-accent/90 rounded-md font-medium text-base"
