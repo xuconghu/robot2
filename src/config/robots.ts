@@ -22,13 +22,10 @@ export const ROBOTS_PER_ASSESSMENT = 5;
 // 您可以根据需要更新此列表
 // 使用robot301-robot349编号范围，避免与历史数据冲突
 const SELECTED_ROBOT_IDS = [
-  'robot301', 'robot302', 'robot303', 'robot304', 'robot305', 'robot306', 'robot307',
-  'robot308', 'robot309', 'robot310', 'robot311', 'robot312', 'robot313', 'robot314',
-  'robot315', 'robot316', 'robot317', 'robot318', 'robot319', 'robot320', 'robot321',
-  'robot322', 'robot323', 'robot324', 'robot325', 'robot326', 'robot327', 'robot328',
-  'robot329', 'robot330', 'robot331', 'robot332', 'robot333', 'robot334', 'robot335',
-  'robot336', 'robot337', 'robot338', 'robot339', 'robot340', 'robot341', 'robot342',
-  'robot343', 'robot344', 'robot345', 'robot346', 'robot347', 'robot348', 'robot349'
+  'robot318', 'robot301', 'robot313', 'robot328', 'robot338', 'robot334', 'robot303',
+  'robot346', 'robot337', 'robot327', 'robot306', 'robot319', 'robot302', 'robot322',
+  'robot310', 'robot308', 'robot325', 'robot331', 'robot316', 'robot321', 'robot342',
+  'robot315', 'robot348', 'robot344', 'robot314'
 ];
 
 // ============================================================
